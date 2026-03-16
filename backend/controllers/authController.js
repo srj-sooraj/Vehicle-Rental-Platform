@@ -236,3 +236,76 @@ export async function uploadLicense(req, res) {
 
 }
 
+
+export async function forgotPassword(req,res){
+
+try{
+
+const {email} = req.body;
+
+const user = await User.findOne({email});
+
+if(!user){
+return res.status(400).json({message:"User not found"});
+}
+
+const resetToken = Math.floor(100000 + Math.random()*900000);
+
+user.resetPasswordToken = resetToken;
+user.resetPasswordExpire = Date.now() + 10*60*1000;
+
+await user.save();
+
+await sendEmail(
+email,
+"RideHub Password Reset",
+`Your password reset code is ${resetToken}`
+);
+
+res.json({
+message:"Reset code sent to your email"
+});
+
+}catch(error){
+res.status(500).json({error:error.message});
+}
+
+}
+
+export async function resetPassword(req,res){
+
+try{
+
+const {email,token,newPassword} = req.body;
+
+const user = await User.findOne({email});
+
+if(!user){
+return res.status(400).json({message:"User not found"});
+}
+
+if(user.resetPasswordToken != token){
+return res.status(400).json({message:"Invalid reset code"});
+}
+
+if(user.resetPasswordExpire < Date.now()){
+return res.status(400).json({message:"Reset code expired"});
+}
+
+const hashedPassword = await bcrypt.hash(newPassword,10);
+
+user.password = hashedPassword;
+user.resetPasswordToken = null;
+user.resetPasswordExpire = null;
+
+await user.save();
+
+res.json({
+message:"Password reset successful"
+});
+
+}catch(error){
+res.status(500).json({error:error.message});
+}
+
+}

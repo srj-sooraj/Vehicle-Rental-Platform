@@ -1,39 +1,14 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function VerifyOtp(){
+function ForgotPassword(){
 
-const location = useLocation();
+const [email,setEmail] = useState("");
 const navigate = useNavigate();
 
-const email = location.state?.email;
+const sendReset = async ()=>{
 
-const [otp,setOtp] = useState("");
-
-const verifyOtp = async ()=>{
-
-const res = await fetch("http://localhost:5000/api/auth/verify-otp",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({email,otp})
-});
-
-const data = await res.json();
-
-if(res.ok){
-alert("Email verified. You can login now.");
-navigate("/login");
-}else{
-alert(data.message);
-}
-
-};
-
-const resendOtp = async ()=>{
-
-const res = await fetch("http://localhost:5000/api/auth/resend-otp",{
+const res = await fetch("http://localhost:5000/api/auth/forgot-password",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
@@ -44,7 +19,8 @@ body:JSON.stringify({email})
 const data = await res.json();
 
 if(res.ok){
-alert("OTP resent to your email");
+alert(data.message);
+navigate("/reset-password",{state:{email}});
 }else{
 alert(data.message);
 }
@@ -61,36 +37,33 @@ text-gray-900 dark:text-white">
 <div className="w-full max-w-md bg-white/80 dark:bg-white/5 backdrop-blur-2xl border border-gray-200 dark:border-white/10 p-10 rounded-[2rem] shadow-xl">
 
 <div className="text-center mb-8">
+
 <h2 className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500 mb-2">
-VERIFY OTP
+RESET PASSWORD
 </h2>
+
 <p className="text-gray-500 dark:text-white/50">
-OTP sent to <span className="text-purple-500">{email}</span>
+Enter your email to receive reset code
 </p>
+
 </div>
 
 <div className="space-y-6">
 
 <input
-placeholder="Enter OTP"
-value={otp}
-onChange={(e)=>setOtp(e.target.value)}
+type="email"
+placeholder="Email Address"
+value={email}
+onChange={(e)=>setEmail(e.target.value)}
 className="w-full bg-white dark:bg-black/40 border border-gray-300 dark:border-white/10 rounded-xl py-4 px-4 text-gray-900 dark:text-white focus:outline-none focus:border-purple-500"
 />
 
 <button
-onClick={verifyOtp}
-className="w-full py-4 rounded-xl font-bold tracking-wider uppercase
+onClick={sendReset}
+className="w-full py-4 rounded-xl font-bold uppercase
 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white"
 >
-Verify OTP
-</button>
-
-<button
-onClick={resendOtp}
-className="w-full py-3 rounded-xl border border-gray-300 dark:border-white/10 text-gray-600 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/5 transition"
->
-Resend OTP
+Send Reset Code
 </button>
 
 </div>
@@ -103,4 +76,4 @@ Resend OTP
 
 }
 
-export default VerifyOtp;
+export default ForgotPassword;

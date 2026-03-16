@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import VehicleDetails from "./pages/VehicleDetals";
 import MyBookings from "./pages/MyBookings";
 import Navbar from "./components/Navbar";
@@ -14,7 +16,6 @@ import AdminBookings from "./pages/AdminBookings";
 import AdminVehicles from "./pages/AdminVehicle";
 import ProtectedAdmin from "./pages/ProtectAdmin";
 import VerifyOtp from "./pages/VerifyOtp";
-
 import Vehicles from "./pages/Vehicles";
 
 function App() {
@@ -33,6 +34,8 @@ function App() {
                 <Route path="/vehicles" element={<Vehicles />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword/>}/>
+                <Route path="/reset-password" element={<ResetPassword/>}/>
                 <Route path="/verify-otp" element={<VerifyOtp />} />
                 <Route path="/vehicle/:id" element={<VehicleDetails />} />
                 <Route path="/my-bookings" element={<MyBookings />} />

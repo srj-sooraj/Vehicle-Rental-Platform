@@ -66,54 +66,87 @@ navigate("/admin/vehicles");
 
 return(
 
-<div style={{padding:"20px"}}>
+<div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-purple-100 dark:from-gray-950 dark:via-gray-900 dark:to-black pt-28 px-6">
 
-<h1>Edit Vehicle</h1>
+<div className="max-w-3xl mx-auto bg-white/80 dark:bg-gray-900/70 backdrop-blur-xl border border-gray-200 dark:border-gray-700 p-10 rounded-[2rem] shadow-xl">
 
-<input value={name} onChange={(e)=>setName(e.target.value)} placeholder="Name"/>
-<br/><br/>
+<h1 className="text-3xl font-black mb-8 text-gray-900 dark:text-gray-100">
+Edit Vehicle
+</h1>
 
-<input value={brand} onChange={(e)=>setBrand(e.target.value)} placeholder="Brand"/>
-<br/><br/>
+<div className="space-y-5">
 
-<input value={type} onChange={(e)=>setType(e.target.value)} placeholder="Type"/>
-<br/><br/>
+<input
+value={name}
+onChange={(e)=>setName(e.target.value)}
+placeholder="Name"
+className="w-full px-5 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+/>
 
-<input value={pricePerDay} onChange={(e)=>setPricePerDay(e.target.value)} placeholder="Price"/>
-<br/><br/>
+<input
+value={brand}
+onChange={(e)=>setBrand(e.target.value)}
+placeholder="Brand"
+className="w-full px-5 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+/>
 
-<textarea value={description} onChange={(e)=>setDescription(e.target.value)} placeholder="Description"/>
-<br/><br/>
+<input
+value={type}
+onChange={(e)=>setType(e.target.value)}
+placeholder="Type"
+className="w-full px-5 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+/>
+
+<input
+value={pricePerDay}
+onChange={(e)=>setPricePerDay(e.target.value)}
+placeholder="Price"
+className="w-full px-5 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+/>
+
+<textarea
+value={description}
+onChange={(e)=>setDescription(e.target.value)}
+placeholder="Description"
+className="w-full px-5 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+/>
 
 <input
 value={city}
 onChange={(e)=>setCity(e.target.value)}
 placeholder="City"
+className="w-full px-5 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
 />
-
-<br/><br/>
 
 <input
 value={location}
 onChange={(e)=>setLocation(e.target.value)}
 placeholder="Pickup Location"
+className="w-full px-5 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
 />
 
-<br/><br/>
-
-<select value={status} onChange={(e)=>setStatus(e.target.value)}>
+<select
+value={status}
+onChange={(e)=>setStatus(e.target.value)}
+className="w-full px-5 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+>
 
 <option value="available">Available</option>
 <option value="booked">Booked</option>
 <option value="maintenance">Maintenance</option>
 
-
-
 </select>
 
-<br /><br />
+<button
+onClick={updateVehicle}
+className="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold hover:scale-105 transition"
+>
+Update Vehicle
+</button>
 
-<button onClick={updateVehicle}>Update Vehicle</button>
+</div>
+
+</div>
 
 </div>
 
