@@ -1,87 +1,94 @@
 import Vehicle from "../models/Vehicle.js";
 
 
-// ADD VEHICLE
-export const addVehicle = async (req,res)=>{
-try{
+// Add vehicle
+export async function addVehicle(req, res) {
 
-const vehicle = await Vehicle.create(req.body);
+  try {
+    let imagePaths = [];
+    if (req.files) {
+      imagePaths = req.files.map(function (file) {
+        return file.filename;
+      });
+    }
 
-res.status(201).json(vehicle);
-
-}catch(error){
-res.status(500).json({error:error.message});
-}
-};
-
-
-
-// GET ALL VEHICLES
-export const getVehicles = async (req,res)=>{
-try{
-
-const {type} = req.query;
-
-let filter = {};
-
-if(type){
-filter.type = type;
+    const vehicle = await Vehicle.create({
+      ...req.body,
+      images: imagePaths
+    });
+    res.status(201).json(vehicle);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 }
 
-const vehicles = await Vehicle.find(filter);
 
-res.json(vehicles);
+// Get all vehicle
+export async function getVehicles(req, res) {
 
-}catch(error){
-res.status(500).json({error:error.message});
+  try {
+    const { type, search, city } = req.query;
+    let filter = {};
+    if (type) {
+      filter.type = type;
+    }
+    if (city) {
+      filter.city = { $regex: city, $options: "i" };
+    }
+
+    if (search) {
+      filter.name = { $regex: search, $options: "i" };
+    }
+
+    const vehicles = await Vehicle.find(filter);
+    res.json(vehicles);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+
+  }
+
 }
-};
-
 
 
 // GET SINGLE VEHICLE
-export const getVehicle = async (req,res)=>{
-try{
+export async function getVehicle(req, res) {
 
-const vehicle = await Vehicle.findById(req.params.id);
+  try {
+    const vehicle = await Vehicle.findById(req.params.id);
+    res.json(vehicle);
 
-res.json(vehicle);
-
-}catch(error){
-res.status(500).json({error:error.message});
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 }
-};
 
 
+// Update vehicle
+export async function updateVehicle(req, res) {
 
-// UPDATE VEHICLE
-export const updateVehicle = async (req,res)=>{
-try{
+  try {
+    const vehicle = await Vehicle.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { returnDocument: "after" }
+    );
+    res.json(vehicle);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 
-const vehicle = await Vehicle.findByIdAndUpdate(
-req.params.id,
-req.body,
-{new:true}
-);
-
-res.json(vehicle);
-
-}catch(error){
-res.status(500).json({error:error.message});
 }
-};
 
 
+// Delete vehicle
+export async function deleteVehicle(req, res) {
 
-// DELETE VEHICLE
-export const deleteVehicle = async (req,res)=>{
-try{
-
-await Vehicle.findByIdAndDelete(req.params.id);
-
-res.json({message:"Vehicle deleted"});
-
-}catch(error){
-res.status(500).json({error:error.message});
+  try {
+    await Vehicle.findByIdAndDelete(req.params.id);
+    res.json({
+      message: "Vehicle deleted"
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 }
-};

@@ -20,8 +20,10 @@ required:true
 
 role:{
 type:String,
+enum:["user","admin"],
 default:"user"
 },
+
 phone:{
 type:String
 },
@@ -33,8 +35,14 @@ type:String
 isVerified:{
 type:Boolean,
 default:false
-}
+},
+emailOtp:{
+type:String
+},
 
+otpExpire:{
+type:Date
+},
 },
 {timestamps:true}
 );

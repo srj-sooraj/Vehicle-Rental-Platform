@@ -33,6 +33,27 @@ status:{
 type:String,
 enum:["booked","active","completed","cancelled","overdue"],
 default:"booked"
+},
+customerPhone:{
+type:String,
+required:true
+},
+
+customerLicense:{
+type:String,
+required:true
+},
+paymentStatus:{
+type:String,
+enum:["pending","paid"],
+default:"pending"
+},
+paymentId:{
+type:String
+},
+
+orderId:{
+type:String
 }
 
 },{timestamps:true});

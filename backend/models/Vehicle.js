@@ -23,9 +23,11 @@ type:Number,
 required:true
 },
 
-image:{
+images:[
+{
 type:String
-},
+}
+],
 
 description:{
 type:String
@@ -34,11 +36,18 @@ type:String
 location:{
 type:String
 },
+city:{
+    type:String
+},
 
 status:{
 type:String,
 enum:["available","booked","maintenance"],
 default:"available"
+},
+rating:{
+type:Number,
+default:4
 }
 
 },{timestamps:true});
