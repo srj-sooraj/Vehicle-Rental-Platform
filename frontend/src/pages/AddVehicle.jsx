@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import API from "../services/api";
 
 function AddVehicle(){
 
@@ -18,8 +20,6 @@ const handleSubmit = async (e)=>{
 
 e.preventDefault();
 
-const token = localStorage.getItem("token");
-
 const formData = new FormData();
 
 formData.append("name",name);
@@ -34,21 +34,12 @@ for(let i=0;i<images.length;i++){
 formData.append("images",images[i]);
 }
 
-const res = await fetch("http://localhost:5000/api/vehicles",{
-method:"POST",
-headers:{
-Authorization:`Bearer ${token}`
-},
-body:formData
-});
-
-const data = await res.json();
-
-if(res.ok){
-alert("Vehicle added successfully 🚗");
-navigate("/admin");
-}else{
-alert(data.message || "Failed");
+try {
+  await API.post("/vehicles", formData);
+  toast.success("Vehicle added successfully 🚗");
+  navigate("/admin");
+} catch (error) {
+  toast.error(error.response?.data?.message || "Failed to add vehicle");
 }
 
 };

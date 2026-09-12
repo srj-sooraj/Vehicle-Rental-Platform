@@ -1,5 +1,6 @@
 import {useEffect,useState} from "react";
 import {Link} from "react-router-dom";
+import API, { BACKEND_URL } from "../services/api";
 
 function AdminVehicles(){
 
@@ -9,10 +10,9 @@ const token = localStorage.getItem("token");
 
 useEffect(()=>{
 
-fetch("http://localhost:5000/api/vehicles")
-.then(res=>res.json())
-.then(data=>{
-
+API.get("/vehicles")
+.then(res=>{
+const data = res.data;
 if(Array.isArray(data)){
 setVehicles(data);
 }else{
@@ -32,12 +32,12 @@ const deleteVehicle = async(id)=>{
 
 if(!window.confirm("Delete vehicle?")) return;
 
-await fetch(`http://localhost:5000/api/vehicles/${id}`,{
-method:"DELETE",
-headers:{Authorization:`Bearer ${token}`}
-});
-
-setVehicles(vehicles.filter(v=>v._id !== id));
+try {
+  await API.delete(`/vehicles/${id}`);
+  setVehicles(vehicles.filter(v=>v._id !== id));
+} catch (error) {
+  alert(error.response?.data?.message || "Failed to delete vehicle");
+}
 
 };
 
@@ -88,7 +88,7 @@ Add Vehicle
 <td className="p-4">
 {v.images?.length>0 && (
 <img
-src={`http://localhost:5000/uploads/${v.images[0]}`}
+src={`${BACKEND_URL}/uploads/${v.images[0]}`}
 className="w-20 h-14 object-cover rounded"
 />
 )}

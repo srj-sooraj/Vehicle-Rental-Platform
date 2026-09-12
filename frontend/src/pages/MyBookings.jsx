@@ -2,37 +2,33 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Copy, CalendarClock, CreditCard, Ban, ShieldCheck, Clock, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
+import API, { BACKEND_URL } from "../services/api";
 
 function MyBookings() {
 const [bookings, setBookings] = useState([]);
 const [loading, setLoading] = useState(true);
 
 useEffect(() => {
-const token = localStorage.getItem("token");
-fetch("http://localhost:5000/api/bookings/my", {
-    headers: { Authorization: `Bearer ${token}` }
-})
-    .then(res => res.json())
-    .then(data => {
-        setBookings(data);
+API.get("/bookings/my")
+    .then(res => {
+        setBookings(res.data);
         setLoading(false);
     });
 }, []);
 
 async function cancelBooking(id) {
 if (!window.confirm("Are you sure you want to cancel this booking?")) return;
-const token = localStorage.getItem("token");
 
-await fetch(`http://localhost:5000/api/bookings/cancel/${id}`, {
-    method: "PUT",
-    headers: { Authorization: `Bearer ${token}` }
-});
-
-setBookings(prev =>
-    prev.map(b =>
-        b._id === id ? { ...b, status: "cancelled" } : b
-    )
-);
+try {
+  await API.put(`/bookings/cancel/${id}`);
+  setBookings(prev =>
+      prev.map(b =>
+          b._id === id ? { ...b, status: "cancelled" } : b
+      )
+  );
+} catch (error) {
+  alert(error.response?.data?.message || "Failed to cancel booking");
+}
 }
 
 if (loading) {
@@ -98,7 +94,7 @@ isCancelled
 <div className="w-full md:w-72 h-48 md:h-auto bg-gray-100 dark:bg-gray-800 rounded-3xl overflow-hidden flex-shrink-0 border border-gray-200 dark:border-gray-700 relative group-hover:shadow-inner transition-all">
     {vehicle?.images?.[0] ? (
         <img
-            src={`http://localhost:5000/uploads/${vehicle.images[0]}`}
+            src={`${BACKEND_URL}/uploads/${vehicle.images[0]}`}
             alt={vehicle.name}
             className={`w-full h-full object-cover transition-transform duration-700 ${!isCancelled && 'group-hover:scale-110'}`}
         />

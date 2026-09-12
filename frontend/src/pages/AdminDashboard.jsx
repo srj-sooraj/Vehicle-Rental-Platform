@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import API from "../services/api";
 
 function AdminDashboard() {
   const [vehicles, setVehicles] = useState([]);
@@ -9,15 +10,11 @@ function AdminDashboard() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/vehicles")
-      .then((res) => res.json())
-      .then((data) => setVehicles(data));
+    API.get("/vehicles")
+      .then((res) => setVehicles(res.data));
 
-    fetch("http://localhost:5000/api/bookings", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => setBookings(data));
+    API.get("/bookings")
+      .then((res) => setBookings(res.data));
   }, []);
 
   const totalRevenue = bookings.reduce((sum, b) => sum + b.totalPrice, 0);

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../services/api";
 
 function ForgotPassword(){
 
@@ -8,21 +9,13 @@ const navigate = useNavigate();
 
 const sendReset = async ()=>{
 
-const res = await fetch("http://localhost:5000/api/auth/forgot-password",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({email})
-});
-
-const data = await res.json();
-
-if(res.ok){
-alert(data.message);
-navigate("/reset-password",{state:{email}});
-}else{
-alert(data.message);
+try {
+  const res = await API.post("/auth/forgot-password", { email });
+  const data = res.data;
+  alert(data.message);
+  navigate("/reset-password",{state:{email}});
+} catch (error) {
+  alert(error.response?.data?.message || "Failed to send reset code");
 }
 
 };

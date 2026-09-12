@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Bot, User, CarFront, Sparkles } from "lucide-react";
+import API from "../services/api";
 
 function AIChat() {
   const [message, setMessage] = useState("");
@@ -28,13 +29,8 @@ function AIChat() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/ai/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMsg }),
-      });
-
-      const data = await res.json();
+      const res = await API.post("/ai/chat", { message: userMsg });
+      const data = res.data;
       let parsedReply;
 
       try {

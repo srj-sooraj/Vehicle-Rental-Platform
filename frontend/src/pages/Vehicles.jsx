@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Search, MapPin, SlidersHorizontal, ChevronRight, Fuel, Users } from "lucide-react";
 import { motion } from "framer-motion";
+import API, { BACKEND_URL } from '../services/api';
 
 function Vehicles() {
     const [vehicles, setVehicles] = useState([]);
@@ -18,10 +19,9 @@ function Vehicles() {
         if (qCity) setCity(qCity);
         if (qType) setType(qType);
 
-        fetch("http://localhost:5000/api/vehicles")
-            .then(res => res.json())
-            .then(data => {
-                setVehicles(data);
+        API.get("/vehicles")
+            .then(res => {
+                setVehicles(res.data);
                 setLoading(false);
             });
     }, [searchParams]);
@@ -136,7 +136,7 @@ function Vehicles() {
                                             <div className="h-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border border-gray-200 dark:border-gray-700 rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 flex flex-col group hover:-translate-y-2">
                                             <div className="h-60 w-full relative overflow-hidden bg-gray-100">
                                                 <img
-                                                    src={`http://localhost:5000/uploads/${image}`}
+                                                    src={`${BACKEND_URL}/uploads/${image}`}
                                                     alt={v.name}
                                                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                                 />

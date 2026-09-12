@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { User, Lock, Mail, ArrowRight } from "lucide-react";
+import toast from "react-hot-toast";
+import API from "../services/api";
 
 function Register() {
     const [name, setName] = useState("");
@@ -12,21 +14,14 @@ function Register() {
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        const res = await fetch("http://localhost:5000/api/auth/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ name, email, password })
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
+        try {
+            const res = await API.post("/auth/register", { name, email, password });
+            const data = res.data;
+            console.log("OTP:", res.data.otp);  //for testing only,remove in production
             alert(data.message);
             navigate("/verify-otp", { state: { email } });
-        } else {
-            alert(data.message || "Registration failed");
+        } catch (error) {
+            alert(error.response?.data?.message || "Registration failed");
         }
     };
 

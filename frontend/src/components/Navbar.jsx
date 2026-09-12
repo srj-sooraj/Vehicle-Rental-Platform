@@ -3,6 +3,8 @@ import { User, LogOut, ShieldAlert, Car, MessageSquare, Menu, X } from "lucide-r
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "../components/ThemeToggle.jsx";
+import toast from "react-hot-toast";
+
 
 function Navbar() {
   const navigate = useNavigate();
@@ -10,6 +12,7 @@ function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   function handleLogout() {
+    toast.success("Logout Successfully")
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");

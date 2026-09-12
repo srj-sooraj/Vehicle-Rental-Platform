@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Lock, Mail, ArrowRight } from "lucide-react";
+import toast from "react-hot-toast";
+import API from "../services/api";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -11,23 +13,17 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    });
+    try {
+      const res = await API.post("/auth/login", { email, password });
+      const data = res.data;
 
-    const data = await res.json();
-
-    if (res.ok) {
       alert("Login successful");
+      navigate("/");
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       window.location.reload();   // this refreshes Navbar
-    } else {
-      alert(data.message || "Login failed");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login failed");
     }
   };
 

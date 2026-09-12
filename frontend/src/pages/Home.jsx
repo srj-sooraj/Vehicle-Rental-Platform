@@ -5,6 +5,7 @@ import { Environment, ContactShadows, useGLTF } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { Search, Car, Bike, Truck, ShieldCheck, CreditCard, Wand2, ArrowRight, Zap, CheckCircle2, ChevronRight, Settings } from 'lucide-react';
 import * as THREE from 'three';
+import API, { BACKEND_URL } from '../services/api';
 
 // Pre-load the car model
 useGLTF.preload('/ferrari.glb');
@@ -73,9 +74,9 @@ export default function Home() {
     const [returnDate, setReturnDate] = useState("");
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/vehicles")
-            .then(res => res.json())
-            .then(data => {
+        API.get("/vehicles")
+            .then(res => {
+                const data = res.data;
                 if (Array.isArray(data)) {
                     // Just take top 3 for popular section
                     setVehicles(data.slice(0, 3));
@@ -197,7 +198,7 @@ export default function Home() {
                         vehicles.map((v) => (
                             <motion.div whileHover={{ scale: 1.02 }} key={v._id} className="bg-white/80 backdrop-blur-lg border border-gray-200 rounded-[2rem] overflow-hidden shadow-xl shadow-gray-200/50 flex flex-col group">
                                 <div className="h-60 relative overflow-hidden bg-gray-100">
-                                    <img src={`http://localhost:5000/uploads/${v.images?.[0]}`} alt={v.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                    <img src={`${BACKEND_URL}/uploads/${v.images?.[0]}`} alt={v.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-gray-800 border border-gray-200 shadow-sm uppercase">
                                         {v.type}
                                     </div>

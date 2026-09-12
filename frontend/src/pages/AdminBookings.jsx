@@ -1,4 +1,6 @@
 import {useEffect,useState} from "react";
+import toast from "react-hot-toast";
+import API, { BACKEND_URL } from "../services/api";
 
 function AdminBookings(){
 
@@ -8,11 +10,8 @@ const token = localStorage.getItem("token");
 
 useEffect(()=>{
 
-fetch("http://localhost:5000/api/bookings",{
-headers:{Authorization:`Bearer ${token}`}
-})
-.then(res=>res.json())
-.then(data=>setBookings(data));
+API.get("/bookings")
+.then(res=>setBookings(res.data));
 
 },[]);
 
@@ -20,20 +19,16 @@ headers:{Authorization:`Bearer ${token}`}
 // Update Status
 const updateStatus = async(id,status)=>{
 
-await fetch(`http://localhost:5000/api/bookings/${id}/status`,{
-method:"PUT",
-headers:{
-"Content-Type":"application/json",
-Authorization:`Bearer ${token}`
-},
-body:JSON.stringify({status})
-});
-
-setBookings(prev =>
-prev.map(b =>
-b._id === id ? {...b,status} : b
-)
-);
+try {
+  await API.put(`/bookings/${id}/status`, { status });
+  setBookings(prev =>
+  prev.map(b =>
+  b._id === id ? {...b,status} : b
+  )
+  );
+} catch (error) {
+  toast.error(error.response?.data?.message || "Failed to update status");
+}
 
 };
 
@@ -41,24 +36,17 @@ b._id === id ? {...b,status} : b
 // Mark Returned
 const markReturned = async(id)=>{
 
-await fetch(`http://localhost:5000/api/bookings/${id}/status`,{
-method:"PUT",
-headers:{
-"Content-Type":"application/json",
-Authorization:`Bearer ${token}`
-},
-body:JSON.stringify({
-status:"completed"
-})
-});
-
-alert("Vehicle returned");
-
-setBookings(prev =>
-prev.map(b =>
-b._id === id ? {...b,status:"completed"} : b
-)
-);
+try {
+  await API.put(`/bookings/${id}/status`, { status: "completed" });
+  toast.success("Vehicle returned");
+  setBookings(prev =>
+  prev.map(b =>
+  b._id === id ? {...b,status:"completed"} : b
+  )
+  );
+} catch (error) {
+  toast.error(error.response?.data?.message || "Failed to mark returned");
+}
 
 };
 
@@ -108,7 +96,7 @@ Booking Management
 <td className="p-4">
 {b.user?.drivingLicense && (
 <img
-src={`http://localhost:5000/${b.user.drivingLicense}`}
+src={`${BACKEND_URL}/${b.user.drivingLicense}`}
 className="w-20 h-12 object-cover rounded"
 />
 )}

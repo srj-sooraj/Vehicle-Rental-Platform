@@ -86,7 +86,8 @@ email,
 
 
 res.json({
-message:"OTP sent to email"
+message:"OTP sent to email",
+otp //for testing only,remove in production
 });
 
 }catch(error){  

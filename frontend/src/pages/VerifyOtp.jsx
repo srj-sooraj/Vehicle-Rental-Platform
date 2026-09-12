@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import API from "../services/api";
+
 
 function VerifyOtp(){
 
@@ -12,41 +14,23 @@ const [otp,setOtp] = useState("");
 
 const verifyOtp = async ()=>{
 
-const res = await fetch("http://localhost:5000/api/auth/verify-otp",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({email,otp})
-});
-
-const data = await res.json();
-
-if(res.ok){
-alert("Email verified. You can login now.");
-navigate("/login");
-}else{
-alert(data.message);
+try {
+  const res = await API.post("/auth/verify-otp", { email, otp });
+  alert("Email verified. You can login now.");
+  navigate("/login");
+} catch (error) {
+  alert(error.response?.data?.message || "Verification failed");
 }
 
 };
 
 const resendOtp = async ()=>{
 
-const res = await fetch("http://localhost:5000/api/auth/resend-otp",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({email})
-});
-
-const data = await res.json();
-
-if(res.ok){
-alert("OTP resent to your email");
-}else{
-alert(data.message);
+try {
+  const res = await API.post("/auth/resend-otp", { email });
+  alert("OTP resent to your email");
+} catch (error) {
+  alert(error.response?.data?.message || "Failed to resend OTP");
 }
 
 };

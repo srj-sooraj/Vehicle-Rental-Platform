@@ -1,5 +1,7 @@
 import {useState,useEffect} from "react";
 import {useParams,useNavigate} from "react-router-dom";
+import toast from "react-hot-toast";
+import API from "../services/api";
 
 function EditVehicle(){
 
@@ -17,9 +19,9 @@ const [location,setLocation] = useState("");
 
 useEffect(()=>{
 
-fetch(`http://localhost:5000/api/vehicles/${id}`)
-.then(res=>res.json())
-.then(data=>{
+API.get(`/vehicles/${id}`)
+.then(res=>{
+const data = res.data;
 if(data){
 setName(data.name || "");
 setBrand(data.brand || "");
@@ -38,29 +40,23 @@ setLocation(data.location || "");
 
 const updateVehicle = async ()=>{
 
-const token = localStorage.getItem("token");
+try {
+  await API.put(`/vehicles/${id}`, {
+    name,
+    brand,
+    type,
+    pricePerDay,
+    description,
+    status,
+    city,
+    location
+  });
 
-await fetch(`http://localhost:5000/api/vehicles/${id}`,{
-method:"PUT",
-headers:{
-"Content-Type":"application/json",
-Authorization:`Bearer ${token}`
-},
-body:JSON.stringify({
-name,
-brand,
-type,
-pricePerDay,
-description,
-status,
-city,
-location
-})
-});
-
-alert("Vehicle updated");
-
-navigate("/admin/vehicles");
+  toast.success("Vehicle updated");
+  navigate("/admin/vehicles");
+} catch (error) {
+  toast.error(error.response?.data?.message || "Failed to update vehicle");
+}
 
 };
 

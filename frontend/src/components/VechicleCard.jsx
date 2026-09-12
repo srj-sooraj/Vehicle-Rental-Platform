@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { BACKEND_URL } from "../services/api";
 
 function VehicleCard({ vehicle }) {
 
@@ -15,7 +16,7 @@ function VehicleCard({ vehicle }) {
 
       {image && (
         <img
-          src={`http://localhost:5000/uploads/${image}`}
+          src={`${BACKEND_URL}/uploads/${image}`}
           alt={vehicle.name}
           style={{
             width: "100%",

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import API from "../services/api";
 
 function ResetPassword(){
 
@@ -11,21 +12,17 @@ const [password,setPassword] = useState("");
 
 const reset = async ()=>{
 
-const res = await fetch("http://localhost:5000/api/auth/reset-password",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-email,
-token,
-newPassword:password
-})
-});
-
-const data = await res.json();
-
-alert(data.message);
+try {
+  const res = await API.post("/auth/reset-password", {
+    email,
+    token,
+    newPassword: password
+  });
+  const data = res.data;
+  alert(data.message);
+} catch (error) {
+  alert(error.response?.data?.message || "Failed to reset password");
+}
 
 };
 

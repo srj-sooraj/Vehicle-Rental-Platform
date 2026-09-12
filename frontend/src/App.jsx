@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { Toaster } from "react-hot-toast"; 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -17,6 +17,7 @@ import AdminVehicles from "./pages/AdminVehicle";
 import ProtectedAdmin from "./pages/ProtectAdmin";
 import VerifyOtp from "./pages/VerifyOtp";
 import Vehicles from "./pages/Vehicles";
+import BookingSuccess from "./pages/BookingSuccess";
 
 function App() {
     return (
@@ -25,7 +26,33 @@ function App() {
     text-gray-900 dark:text-gray-100">
 
         <BrowserRouter>
-
+            <Toaster
+                    position="top-center"
+                    toastOptions={{
+                    success: {
+                    style: {
+                    background: "#ecfdf5",
+                    color: "#065f46",
+                    border: "1px solid #10b981"
+                    },
+                    iconTheme: {
+                    primary: "#10b981",
+                    secondary: "#ffffff"
+                    }
+                    },
+                    error: {
+                    style: {
+                    background: "#fef2f2",
+                    color: "#7f1d1d",
+                    border: "1px solid #ef4444"
+                    },
+                    iconTheme: {
+                    primary: "#ef4444",
+                    secondary: "#ffffff"
+                    }
+                    }
+                    }}
+                    />
             <Navbar />
 
             <Routes>
@@ -45,6 +72,7 @@ function App() {
                 <Route path="/admin/bookings" element={<ProtectedAdmin><AdminBookings /></ProtectedAdmin>} />
                 <Route path="/admin" element={<ProtectedAdmin> <AdminDashboard /> </ProtectedAdmin>} />
                 <Route path="/admin/vehicles" element={<ProtectedAdmin><AdminVehicles /></ProtectedAdmin>} />
+                <Route path="/booking-success" element={<BookingSuccess/>}/>
 
             </Routes>
 
