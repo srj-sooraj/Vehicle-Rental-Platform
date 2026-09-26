@@ -9,9 +9,23 @@ const [bookings, setBookings] = useState([]);
 const [loading, setLoading] = useState(true);
 
 useEffect(() => {
+const token = localStorage.getItem("token");
+if (!token) {
+    setLoading(false);
+    return;
+}
+
 API.get("/bookings/my")
     .then(res => {
         setBookings(res.data);
+        setLoading(false);
+    })
+    .catch(err => {
+        console.error("Error fetching bookings:", err);
+        if (err.response && err.response.status === 401) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+        }
         setLoading(false);
     });
 }, []);
